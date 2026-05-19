@@ -2,73 +2,54 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الراية - تحميل التطبيق</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #0d0d0d 50%, #1a1a1a 100%);
-            color: #fff;
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
         }
-        .container { max-width: 500px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
-        
-        /* الهيدر */
-        .header { text-align: center; margin-bottom: 40px; }
+        .container {
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 400px;
+            width: 100%;
+        }
         .logo {
-            width: 100px; height: 100px;
+            width: 100px;
+            height: 100px;
             background: linear-gradient(135deg, #FFD700, #FFA500);
             border-radius: 24px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin: 0 auto 20px;
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
         }
         .logo i { font-size: 50px; color: #0a0a0a; }
-        .header h1 {
-            font-size: 2.5rem;
+        h1 {
+            font-size: 2rem;
             background: linear-gradient(135deg, #FFD700, #FFA500);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             margin-bottom: 8px;
         }
-        .header p { color: #aaa; font-size: 0.9rem; }
-        
-        /* بطاقة المعلومات */
-        .info-card {
-            background: rgba(26, 26, 26, 0.95);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 20px;
-            border: 1px solid #333;
-            text-align: center;
+        .version {
+            color: #FFD700;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
         }
-        .version-badge {
-            background: rgba(255, 215, 0, 0.15);
-            border-radius: 50px;
-            padding: 8px 20px;
-            display: inline-block;
-            margin-bottom: 16px;
-        }
-        .version-badge span { color: #FFD700; font-weight: bold; font-size: 1.2rem; }
-        .info-card h2 { color: #FFD700; font-size: 1.5rem; margin-bottom: 12px; }
-        .info-card p { color: #aaa; line-height: 1.6; margin-bottom: 8px; }
-        
-        .features-list { text-align: right; margin: 20px 0; padding-right: 20px; }
-        .features-list li {
-            color: #ccc; margin-bottom: 10px;
-            list-style: none; display: flex; align-items: center; gap: 10px;
-        }
-        .features-list li i { color: #FFD700; width: 24px; }
-        
-        /* أزرار التحميل */
         .download-btn {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             border: none;
-            border-radius: 60px;
-            padding: 16px 28px;
+            border-radius: 50px;
+            padding: 18px 30px;
             width: 100%;
             font-size: 1.2rem;
             font-weight: bold;
@@ -78,269 +59,121 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            transition: all 0.3s ease;
-            margin-bottom: 12px;
+            transition: transform 0.2s;
+            margin-bottom: 15px;
         }
-        .download-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4); }
-        .download-btn i { font-size: 1.3rem; }
-        
-        .secondary-btn {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 60px;
-            padding: 12px 20px;
-            width: 100%;
-            font-size: 0.9rem;
-            color: #FFD700;
-            cursor: pointer;
+        .download-btn:hover { transform: scale(1.02); }
+        .download-btn:active { transform: scale(0.98); }
+        .loading {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
+            gap: 15px;
         }
-        .secondary-btn:hover { background: rgba(255, 215, 0, 0.2); border-color: #FFD700; }
-        
-        /* مؤشر التحميل */
-        .progress-container { display: none; margin-top: 15px; }
-        .progress-bar { width: 100%; height: 6px; background: #333; border-radius: 10px; overflow: hidden; }
-        .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #FFD700, #FFA500); border-radius: 10px; transition: width 0.3s ease; }
-        .progress-text { text-align: center; margin-top: 8px; font-size: 0.75rem; color: #FFD700; }
-        
-        /* الفوتر */
-        .footer { text-align: center; margin-top: 40px; padding-top: 20px; color: #555; font-size: 0.65rem; }
-        
-        /* رسالة التنبيه */
-        .toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            padding: 10px 20px; border-radius: 50px; z-index: 1000;
-            animation: slideUp 0.3s ease; display: none; align-items: center; gap: 8px; font-size: 0.85rem;
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #333;
+            border-top-color: #FFD700;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
-        .toast.success { background: #28a745; color: white; }
-        .toast.error { background: #dc3545; color: white; }
-        .toast.info { background: #17a2b8; color: white; }
-        @keyframes slideUp { from { transform: translateX(-50%) translateY(100px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
-        
-        /* شاشة تحميل */
-        .loading-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center;
-            z-index: 2000; flex-direction: column; gap: 15px;
-        }
-        .loading-spinner { width: 50px; height: 50px; border: 3px solid #333; border-top-color: #FFD700; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        @media (max-width: 480px) {
-            .container { padding: 15px; }
-            .header h1 { font-size: 2rem; }
-            .download-btn { padding: 14px 20px; font-size: 1rem; }
-            .info-card { padding: 20px; }
+        .error { color: #ff6b6b; font-size: 0.9rem; margin-top: 15px; }
+        .footer {
+            margin-top: 40px;
+            font-size: 0.7rem;
+            color: #555;
         }
     </style>
 </head>
 <body>
-    <!-- شاشة تحميل -->
-    <div id="loadingOverlay" class="loading-overlay" style="display: flex;">
-        <div class="loading-spinner"></div>
-        <div style="color: #FFD700;">جاري تحميل معلومات التطبيق...</div>
-    </div>
-
-    <div class="container" id="mainContent" style="display: none;">
-        <!-- الهيدر -->
-        <div class="header">
-            <div class="logo">
-                <i class="fas fa-flag-checkered"></i>
+    <div class="container" id="app">
+        <div class="logo">
+            <i class="fas fa-flag-checkered"></i>
+        </div>
+        <h1>الراية</h1>
+        <div class="version" id="version">جاري التحميل...</div>
+        
+        <div id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>جاري تحميل رابط التحميل...</div>
             </div>
-            <h1>الراية</h1>
-            <p>منبر الحق... صوت الأمة</p>
         </div>
-        
-        <!-- بطاقة المعلومات -->
-        <div class="info-card">
-            <div class="version-badge">
-                <i class="fas fa-code-branch"></i> <span id="appVersion">جاري التحميل...</span>
-            </div>
-            <h2>تحميل التطبيق</h2>
-            <p>الإصدار الأحدث من تطبيق الراية</p>
-            <ul class="features-list">
-                <li><i class="fas fa-headphones"></i> مقاطع صوتية ومرئية</li>
-                <li><i class="fas fa-download"></i> تحميل للمشاهدة دون إنترنت</li>
-                <li><i class="fas fa-heart"></i> إضافة إلى المفضلة</li>
-                <li><i class="fas fa-search"></i> بحث متقدم</li>
-                <li><i class="fas fa-sync-alt"></i> تحديثات مستمرة</li>
-            </ul>
-        </div>
-        
-        <!-- زر التحميل الرئيسي -->
-        <button class="download-btn" id="downloadBtn" onclick="startDownload()">
-            <i class="fas fa-download"></i> تحميل التطبيق الآن
-        </button>
-        
-        <!-- مؤشر التحميل -->
-        <div id="progressContainer" class="progress-container">
-            <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
-            <div id="progressText" class="progress-text">جاري التحضير...</div>
-        </div>
-        
-        <!-- زر مشاركة -->
-        <button class="secondary-btn" onclick="shareApp()">
-            <i class="fas fa-share-alt"></i> مشاركة التطبيق
-        </button>
         
         <div class="footer">
-            <p>جميع الحقوق محفوظة © 2026 تطبيق الراية</p>
+            <p>منبر الحق... صوت الأمة</p>
         </div>
     </div>
-    
-    <div id="toast"></div>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
-        // إعدادات API
+        // إعدادات JSONBin
         const BIN_ID = '6a0733b0c0954111d82a7361';
         const API_KEY = '$2a$10$y4mNOprJ8lAMY0xM8KfYTuehMVndGcLtG2f83auImdb6Oa/wmXGEC';
         
-        let appData = {
-            version: '',
-            downloadUrl: '',
-            directUrl: ''
-        };
+        async function getDownloadUrl() {
+            const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: { 'X-Master-Key': API_KEY }
+            });
+            
+            if (!response.ok) throw new Error('فشل الاتصال');
+            
+            const data = await response.json();
+            const record = data.record || data;
+            
+            // استخراج الرابط من الحقول المختلفة
+            const url = record.appDownloadUrl || record.directApkUrl || '';
+            
+            return { url, version: record.appVersion || '1.0.0' };
+        }
         
-        // جلب البيانات من السيرفر
-        async function loadAppData() {
+        async function init() {
+            const contentDiv = document.getElementById('content');
+            const versionDiv = document.getElementById('version');
+            
             try {
-                console.log('جلب بيانات التطبيق...');
+                const { url, version } = await getDownloadUrl();
+                versionDiv.innerHTML = `الإصدار ${version}`;
                 
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': API_KEY }
-                });
-                
-                if (!response.ok) throw new Error('فشل الاتصال');
-                
-                const data = await response.json();
-                console.log('البيانات:', data);
-                
-                // ✅ استخراج موحد يدعم جميع الهياكل (الحالي والقديم)
-                function extractData(r) {
-                    let rec = r.record || r;
-                    while (rec && rec.record && !rec.appVersion && !rec.appDownloadUrl) rec = rec.record;
-                    return rec;
+                if (url && url !== '') {
+                    // ✅ عرض زر التحميل
+                    contentDiv.innerHTML = `
+                        <button class="download-btn" onclick="startDownload()">
+                            <i class="fas fa-download"></i> تحميل التطبيق
+                        </button>
+                    `;
+                    
+                    // حفظ الرابط لاستخدامه لاحقاً
+                    window.downloadUrl = url;
+                    
+                } else {
+                    contentDiv.innerHTML = `
+                        <div class="error">
+                            <i class="fas fa-exclamation-circle"></i> رابط التحميل غير متوفر حالياً
+                        </div>
+                    `;
                 }
-                const recordData = extractData(data);
-                
-                appData.version = recordData.appVersion || '1.0.0';
-                appData.downloadUrl = recordData.appDownloadUrl || '';
-                appData.directUrl = recordData.directApkUrl || '';
-                
-                console.log('البيانات المستخرجة:', appData);
-                
-                // عرض الإصدار
-                document.getElementById('appVersion').innerHTML = `الإصدار ${appData.version}`;
-                document.title = `الراية - تحميل الإصدار ${appData.version}`;
-                
-                return true;
                 
             } catch (error) {
-                console.error('خطأ:', error);
-                document.getElementById('appVersion').innerHTML = 'الإصدار 1.0.0';
-                return false;
+                console.error(error);
+                contentDiv.innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-wifi"></i> خطأ في الاتصال، حاول مرة أخرى
+                        <button onclick="location.reload()" style="display: block; margin: 15px auto 0; background: #FFD700; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer;">إعادة المحاولة</button>
+                    </div>
+                `;
             }
         }
         
-     // بدء التحميل - نسخة تعمل على GitHub Pages
-function startDownload(event) {
-    if (event) event.preventDefault();
-    
-    let url = appData.downloadUrl || appData.directUrl;
-    
-    if (!url || url === '' || url === 'https://example.com/app.apk') {
-        showToast('⚠️ رابط التحميل غير متوفر حالياً', 'error');
-        return;
-    }
-    
-    // ✅ الحل: استخدام رابط مباشر <a> بدلاً من window.open
-    // إنشاء رابط مؤقت وهمي والنقر عليه تلقائياً
-    const link = document.createElement('a');
-    link.href = url;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.download = 'app-release.apk'; // اسم الملف المحفوظ
-    
-    // إضافة الرابط إلى الصفحة
-    document.body.appendChild(link);
-    
-    // محاكاة النقر
-    link.click();
-    
-    // إزالة الرابط
-    document.body.removeChild(link);
-    
-    showToast('✓ جاري بدء التحميل...', 'success');
-    
-    // بدء مؤشر وهمي للتحميل
-    const progressContainer = document.getElementById('progressContainer');
-    const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
-    
-    if (progressContainer) {
-        progressContainer.style.display = 'block';
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += 10;
-            progressFill.style.width = `${progress}%`;
-            progressText.textContent = `جاري التحضير... ${progress}%`;
-            
-            if (progress >= 100) {
-                clearInterval(interval);
-                setTimeout(() => {
-                    progressContainer.style.display = 'none';
-                    progressFill.style.width = '0%';
-                }, 1500);
+        function startDownload() {
+            const url = window.downloadUrl;
+            if (url) {
+                // ✅ فتح الرابط مباشرة
+                window.location.href = url;
             }
-        }, 150);
-    }
-}
-        // مشاركة التطبيق
-        function shareApp() {
-            const url = appData.downloadUrl || appData.directUrl || window.location.href;
-            const shareText = `📱 تطبيق الراية - منبر الحق... صوت الأمة\n\n🆚 الإصدار: ${appData.version}\n📥 رابط التحميل: ${url}\n\n✨ مميزات التطبيق:\n• مقاطع صوتية ومرئية\n• تحميل للمشاهدة دون إنترنت\n• تحديثات مستمرة`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'تطبيق الراية',
-                    text: shareText,
-                    url: url
-                }).catch(() => copyToClipboard(shareText));
-            } else {
-                copyToClipboard(shareText);
-            }
-        }
-        
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('تم نسخ رابط التحميل', 'success');
-            }).catch(() => {
-                showToast('اضغط مع الاستمرار ثم اختر نسخ', 'info');
-            });
-        }
-        
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            toast.className = `toast ${type}`;
-            const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
-            toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
-            toast.style.display = 'flex';
-            
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
-        }
-        
-        // تهيئة الصفحة
-        async function init() {
-            await loadAppData();
-            
-            document.getElementById('loadingOverlay').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
         }
         
         init();
