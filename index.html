@@ -246,41 +246,59 @@
             }
         }
         
-        // بدء التحميل
-        function startDownload() {
-            let url = appData.downloadUrl || appData.directUrl;
+     // بدء التحميل - نسخة تعمل على GitHub Pages
+function startDownload(event) {
+    if (event) event.preventDefault();
+    
+    let url = appData.downloadUrl || appData.directUrl;
+    
+    if (!url || url === '' || url === 'https://example.com/app.apk') {
+        showToast('⚠️ رابط التحميل غير متوفر حالياً', 'error');
+        return;
+    }
+    
+    // ✅ الحل: استخدام رابط مباشر <a> بدلاً من window.open
+    // إنشاء رابط مؤقت وهمي والنقر عليه تلقائياً
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.download = 'app-release.apk'; // اسم الملف المحفوظ
+    
+    // إضافة الرابط إلى الصفحة
+    document.body.appendChild(link);
+    
+    // محاكاة النقر
+    link.click();
+    
+    // إزالة الرابط
+    document.body.removeChild(link);
+    
+    showToast('✓ جاري بدء التحميل...', 'success');
+    
+    // بدء مؤشر وهمي للتحميل
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    
+    if (progressContainer) {
+        progressContainer.style.display = 'block';
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            progressFill.style.width = `${progress}%`;
+            progressText.textContent = `جاري التحضير... ${progress}%`;
             
-            if (!url || url === '') {
-                showToast('⚠️ رابط التحميل غير متوفر حالياً', 'error');
-                return;
+            if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    progressFill.style.width = '0%';
+                }, 1500);
             }
-            
-            // إظهار مؤشر التحميل
-            const progressContainer = document.getElementById('progressContainer');
-            const progressFill = document.getElementById('progressFill');
-            const progressText = document.getElementById('progressText');
-            
-            progressContainer.style.display = 'block';
-            
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressFill.style.width = `${progress}%`;
-                progressText.textContent = `جاري التحضير... ${progress}%`;
-                
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    window.open(url, '_blank');
-                    showToast('جاري فتح رابط التحميل...', 'success');
-                    
-                    setTimeout(() => {
-                        progressContainer.style.display = 'none';
-                        progressFill.style.width = '0%';
-                    }, 1500);
-                }
-            }, 200);
-        }
-        
+        }, 150);
+    }
+}
         // مشاركة التطبيق
         function shareApp() {
             const url = appData.downloadUrl || appData.directUrl || window.location.href;
