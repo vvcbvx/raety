@@ -18,20 +18,78 @@
         .container {
             text-align: center;
             padding: 40px 20px;
-            max-width: 400px;
+            max-width: 450px;
             width: 100%;
         }
-        .logo {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+        
+        /* ===== معرض الصور ===== */
+        .gallery-container {
+            margin-bottom: 25px;
+        }
+        
+        /* الصورة الرئيسية */
+        .main-image {
+            position: absolute;
+            left: -35%;
+            width: 30%;
+            height: 125px;
+            background: linear-gradient(135deg, #FFD70020, #FFA50020);
             border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
+            background-color: #1a1a1a;
         }
-        .logo i { font-size: 50px; color: #0a0a0a; }
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;  /* ✅ يجعل الصورة تظهر كاملة بدون قص */
+            transition: transform 0.3s ease;
+        }
+        .main-image img:hover {
+            transform: scale(1.02);
+        }
+        
+        /* الصور المصغرة */
+        .thumbnails {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .thumbnail {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+            background-color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;  /* ✅ الصور المصغرة أيضاً تظهر كاملة */
+        }
+        .thumbnail:hover {
+            transform: translateY(-5px);
+            border-color: #FFD700;
+            opacity: 1;
+        }
+        .thumbnail.active {
+            border-color: #FFD700;
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(255,215,0,0.5);
+        }
+        
         h1 {
             font-size: 2rem;
             background: linear-gradient(135deg, #FFD700, #FFA500);
@@ -43,7 +101,7 @@
         .version {
             color: #FFD700;
             font-size: 0.9rem;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .download-btn {
             background: linear-gradient(135deg, #FFD700, #FFA500);
@@ -94,10 +152,8 @@
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .error { color: #ff6b6b; font-size: 0.9rem; margin-top: 15px; }
-        .success { color: #28a745; font-size: 0.9rem; margin-top: 15px; }
         .footer {
-            margin-top: 40px;
+            margin-top: 30px;
             font-size: 0.7rem;
             color: #555;
         }
@@ -110,13 +166,41 @@
             font-size: 0.7rem;
             display: none;
         }
+        
+        /* زر تبديل وضع العرض (اختياري) */
+        .view-mode-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            border-radius: 20px;
+            padding: 5px 10px;
+            color: #FFD700;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .main-image {
+            position: relative;
+        }
     </style>
 </head>
 <body>
     <div class="container" id="app">
-        <div class="logo">
-            <i class="fas fa-flag-checkered"></i>
+        
+        <!-- ===== معرض الصور ===== -->
+        <div class="gallery-container">
+            <!-- الصورة الرئيسية -->
+            <div class="main-image" id="mainImage">
+                <img id="mainImg" src="" alt="الراية">
+            </div>
+            
+            <!-- الصور المصغرة -->
+            <div class="thumbnails" id="thumbnails">
+                <!-- سيتم إضافة الصور بواسطة JavaScript -->
+            </div>
         </div>
+        
         <h1>الراية</h1>
         <div class="version" id="version">جاري التحميل...</div>
         
@@ -135,10 +219,80 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
-        // الرابط المباشر الثابت (كحل أخير)
-        const DIRECT_URL = 'https://huggingface.co/hlhlhhk/app-AL/resolve/main/app-release.apk?download=true';
+        // ===== قائمة الصور (ضع روابط صورك هنا) =====
+        const images = [
+            {
+                url: "photo/ic_launcher_alternate-playstore.png",
+                alt: "شعار الراية الأبيض"
+            },
+            {
+                url: "photo/ic_launcher_dark-playstore.png",
+                alt: "شعار الراية الداكن"
+            },
+            {
+                url: "photo/ic_launcher_alternate-playstore.png",
+                alt: "شعار الراية المتناوب"
+            },
+            {
+                url: "photo/ic_launcher-playstore.png",
+                alt: "شعار الراية الافتراضي"
+            }
+        ];
         
-        // إعدادات JSONBin
+        // رابط افتراضي
+        const DEFAULT_IMAGE = "https://raw.githubusercontent.com/vvcbvx/raety/main/app/src/main/ic_launcher_light-playstore.png";
+        
+        let currentMainImage = 0;
+        let currentViewMode = 'contain'; // contain أو cover
+        
+        // عرض الصور المصغرة
+        function renderThumbnails() {
+            const thumbnailsContainer = document.getElementById('thumbnails');
+            const mainImg = document.getElementById('mainImg');
+            
+            if (images.length > 0 && images[0].url) {
+                mainImg.src = images[0].url;
+            } else {
+                mainImg.src = DEFAULT_IMAGE;
+            }
+            
+            thumbnailsContainer.innerHTML = images.map((img, index) => `
+                <div class="thumbnail ${index === 0 ? 'active' : ''}" 
+                     data-index="${index}"
+                     onmouseenter="changeMainImage(${index})"
+                     onclick="changeMainImage(${index})">
+                    <img src="${img.url}" alt="${img.alt}" onerror="this.src='${DEFAULT_IMAGE}'">
+                </div>
+            `).join('');
+        }
+        
+        // تغيير الصورة الرئيسية
+        function changeMainImage(index) {
+            if (index === currentMainImage) return;
+            
+            currentMainImage = index;
+            const mainImg = document.getElementById('mainImg');
+            const newImageUrl = images[index]?.url || DEFAULT_IMAGE;
+            
+            // تأثير انتقال سلس
+            mainImg.style.opacity = '0.5';
+            setTimeout(() => {
+                mainImg.src = newImageUrl;
+                mainImg.style.opacity = '1';
+            }, 150);
+            
+            // تحديث حالة النشاط
+            document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+                if (i === index) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+        
+        // ===== باقي كود التحميل =====
+        const DIRECT_URL = 'https://huggingface.co/hlhlhhk/app-AL/resolve/main/app-release.apk?download=true';
         const BIN_ID = '6a0733b0c0954111d82a7361';
         const API_KEY = '$2a$10$y4mNOprJ8lAMY0xM8KfYTuehMVndGcLtG2f83auImdb6Oa/wmXGEC';
         
@@ -154,13 +308,10 @@
                 
                 const data = await response.json();
                 const record = data.record || data;
-                
-                // استخراج الرابط
-                const url = record.directApkUrl || record.directApkUrl || '';
+                const url = record.directApkUrl || record.appDownloadUrl || '';
                 const version = record.appVersion || '1.0.0';
                 
                 return { url: url || DIRECT_URL, version };
-                
             } catch (error) {
                 console.error('خطأ:', error);
                 return { url: DIRECT_URL, version: '1.0.0' };
@@ -172,29 +323,28 @@
                 alert('رابط التحميل غير متوفر حالياً');
                 return;
             }
-            
-            // ✅ الطريقة الأكثر ضماناً: فتح الرابط في نفس النافذة
             window.location.href = downloadUrl;
             
-            // عرض رسالة للمستخدم
             const contentDiv = document.getElementById('content');
             contentDiv.innerHTML = `
-                <div class="success">
+                <div style="color: #28a745; margin: 10px 0;">
                     <i class="fas fa-check-circle"></i> جاري فتح رابط التحميل...
                 </div>
                 <div class="link-box" id="linkBox" style="display: flex; flex-direction: column; gap: 10px;">
                     <p>إذا لم يبدأ التحميل تلقائياً، اضغط على الرابط:</p>
-                    <a href="${downloadUrl}" target="_blank" style="color: #FFD700; word-break: break-all;">${downloadUrl.substring(0, 80)}...</a>
+                    <a href="${downloadUrl}" target="_blank" style="color: #FFD700;">${downloadUrl.substring(0, 80)}...</a>
                 </div>
             `;
         }
         
         function copyUrl() {
             navigator.clipboard.writeText(downloadUrl);
-            alert('تم نسخ الرابط');
+            alert('✅ تم نسخ الرابط');
         }
         
         async function init() {
+            renderThumbnails();
+            
             const contentDiv = document.getElementById('content');
             const versionDiv = document.getElementById('version');
             
@@ -202,7 +352,6 @@
             downloadUrl = url;
             versionDiv.innerHTML = `الإصدار ${version}`;
             
-            // عرض زر التحميل
             contentDiv.innerHTML = `
                 <button class="download-btn" onclick="startDownload()">
                     <i class="fas fa-download"></i> تحميل التطبيق
@@ -216,8 +365,8 @@
                 </div>
             `;
             
-            // إظهار صندوق الرابط
-            document.getElementById('linkBox').style.display = 'block';
+            const linkBox = document.getElementById('linkBox');
+            if (linkBox) linkBox.style.display = 'block';
         }
         
         init();
