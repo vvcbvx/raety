@@ -3,373 +3,551 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الراية - تحميل التطبيق</title>
+    <title>الراية | منصتك الإسلامية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Cairo', 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
+        :root{
+          --bg-void: #08090a;
+          --bg-panel: #101210;
+          --gold: #c9a24b;
+          --gold-bright: #e9c876;
+          --gold-dim: #6f5a2c;
+          --ink: #ece6d6;
+          --ink-dim: #9a9484;
+          --line: rgba(201,162,75,0.18);
+          --serif: 'Amiri', serif;
+          --kufi: 'Reem Kufi', sans-serif;
+          --sans: 'Tajawal', sans-serif;
         }
-        .container {
-            text-align: center;
-            padding: 40px 20px;
-            max-width: 450px;
-            width: 100%;
+
+        *{margin:0;padding:0;box-sizing:border-box;}
+
+        html,body{height:100%;}
+
+        body{
+          background:var(--bg-void);
+          color:var(--ink);
+          font-family:var(--sans);
+          position:relative;
         }
-        
-        /* ===== معرض الصور ===== */
-        .gallery-container {
-            margin-bottom: 25px;
+
+        body::before{
+          content:'';
+          position:fixed; inset:0;
+          background:
+            radial-gradient(ellipse 900px 500px at 15% -5%, rgba(201,162,75,0.08), transparent 60%),
+            radial-gradient(ellipse 700px 600px at 100% 20%, rgba(201,162,75,0.06), transparent 60%),
+            radial-gradient(ellipse 900px 600px at 50% 110%, rgba(201,162,75,0.07), transparent 60%);
+          pointer-events:none; z-index:0;
         }
-        
-        /* الصورة الرئيسية */
-        .main-image {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #FFD70020, #FFA50020);
-            border-radius: 24px;
-            overflow: hidden;
-            margin-bottom: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #1a1a1a;
+        body::after{
+          content:'';
+          position:fixed; inset:0;
+          opacity:0.035;
+          background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+          pointer-events:none; z-index:1; mix-blend-mode:overlay;
         }
-        .main-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease;
+
+        /* ============ PRELOADER ============ */
+        #preloader{
+          position:fixed; inset:0; z-index:200;
+          background:var(--bg-void);
+          display:flex; flex-direction:column; align-items:center; justify-content:center;
+          transition:opacity .8s ease, visibility 0s linear 0s;
         }
-        .main-image img:hover {
-            transform: scale(1.02);
+        #preloader.hide{ opacity:0; visibility:hidden; transition:opacity .8s ease, visibility 0s linear .8s; }
+        .pre-mark{
+          width:104px;height:104px; border:1.5px solid var(--gold); border-radius:14px;
+          display:flex;align-items:center;justify-content:center; overflow:hidden;
+          animation:preload-pulse 1.8s ease-in-out infinite;
         }
-        
-        /* الصور المصغرة */
-        .thumbnails {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .pre-mark img{width:72%;height:72%;object-fit:contain;}
+        @keyframes preload-pulse{
+          0%,100%{box-shadow:0 0 0 0 rgba(201,162,75,0.25);}
+          50%{box-shadow:0 0 0 14px rgba(201,162,75,0);}
         }
-        .thumbnail {
-            width: 70px;
-            height: 70px;
-            border-radius: 16px;
-            overflow: hidden;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            opacity: 0.6;
-            background-color: #1a1a1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .pre-title{
+          margin-top:20px; font-family:var(--serif); font-weight:700; color:var(--gold-bright);
+          font-size:1.7rem; letter-spacing:1px;
         }
-        .thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+        .pre-bar{
+          width:180px; height:2px; margin-top:26px; background:rgba(201,162,75,0.15);
+          border-radius:2px; overflow:hidden;
         }
-        .thumbnail:hover {
-            transform: translateY(-5px);
-            border-color: #FFD700;
-            opacity: 1;
+        .pre-bar-fill{
+          height:100%; width:0%; background:linear-gradient(90deg, var(--gold-dim), var(--gold-bright));
         }
-        .thumbnail.active {
-            border-color: #FFD700;
-            opacity: 1;
-            box-shadow: 0 0 15px rgba(255,215,0,0.5);
+        .pre-note{
+          margin-top:16px; font-family:var(--kufi); font-size:0.72rem; color:var(--ink-dim); letter-spacing:3px;
         }
-        
-        h1 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 8px;
+
+        /* ============ DECK (تمرير عمودي) ============ */
+        .deck{
+          position:relative; width:100%; height:100svh; z-index:2;
+          overflow-y:auto; overflow-x:hidden;
+          scroll-snap-type:y mandatory;
+          scroll-behavior:smooth;
+          -webkit-overflow-scrolling:touch;
         }
-        .version {
-            color: #FFD700;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+        .deck::-webkit-scrollbar{width:0;height:0;}
+
+        .slide{
+          position:relative; width:100%; height:100svh;
+          display:flex; flex-direction:column; align-items:center; justify-content:center;
+          text-align:center;
+          padding:8vh 6vw;
+          scroll-snap-align:start; scroll-snap-stop:always;
         }
-        .download-btn {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            border: none;
-            border-radius: 50px;
-            padding: 18px 30px;
-            width: 100%;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #0a0a0a;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            transition: transform 0.2s;
-            margin-bottom: 15px;
+
+        .kicker{
+          font-family:var(--kufi); color:var(--gold); font-size:0.8rem; letter-spacing:6px;
+          opacity:0; transform:translateY(16px);
         }
-        .download-btn:hover { transform: scale(1.02); }
-        .download-btn:active { transform: scale(0.98); }
-        .secondary-btn {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 50px;
-            padding: 12px 20px;
-            width: 100%;
-            font-size: 0.9rem;
-            color: #FFD700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
+        .slide.active .kicker{animation:up .9s ease forwards .1s;}
+
+        h1.slide-title{
+          font-family:var(--serif); font-weight:700;
+          font-size:clamp(2.6rem, 7vw, 5.4rem);
+          line-height:1.15; margin-top:22px;
+          background:linear-gradient(180deg, #f3ecd8 0%, var(--gold-bright) 55%, var(--gold-dim) 100%);
+          -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+          opacity:0; transform:translateY(24px);
         }
-        .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
+        .slide.active h1.slide-title{animation:up 1s ease forwards .22s;}
+
+        .slide p.lead{
+          margin-top:22px; max-width:600px; color:var(--ink-dim);
+          font-size:1.1rem; line-height:2; font-weight:300;
+          opacity:0; transform:translateY(20px);
         }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #333;
-            border-top-color: #FFD700;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+        .slide.active p.lead{animation:up 1s ease forwards .38s;}
+
+        @keyframes up{to{opacity:1; transform:translateY(0);}}
+
+        .dots{
+          position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+          display:flex; gap:10px; z-index:50;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .footer {
-            margin-top: 30px;
-            font-size: 0.7rem;
-            color: #555;
+        .dot{
+          width:8px;height:8px;border-radius:14px;
+          background:rgba(201,162,75,0.25);
+          cursor:pointer; transition:all .4s ease; position:relative;
         }
-        .link-box {
-            background: rgba(0,0,0,0.3);
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 15px;
-            word-break: break-all;
-            font-size: 0.7rem;
-            display: none;
+        .dot.active{background:var(--gold-bright); width:26px; border-radius:5px;}
+
+        .timer-bar{
+          position:fixed; top:0; left:0; height:2px; background:var(--gold-bright);
+          z-index:60; width:0%;
         }
-        .direct-link {
-            color: #FFD700;
-            text-decoration: none;
+
+        .nav-btn{
+          display:none;
+        }
+
+        .slide-index{
+          position:fixed; top:26px; right:6vw; z-index:50;
+          font-family:var(--kufi); color:var(--ink-dim); font-size:0.78rem; letter-spacing:2px;
+        }
+        .slide-index b{color:var(--gold-bright);}
+
+        .mark{
+          width:210px;height:210px; border:1.5px solid var(--gold); border-radius:14px;
+          display:flex;align-items:center;justify-content:center; margin-bottom:6px;
+          opacity:0; transform:scale(0.85); overflow:hidden; padding:0;
+          background:#0c0d0a;
+          box-shadow:0 18px 45px -18px rgba(201,162,75,0.45);
+        }
+        .slide.active .mark{animation:pop .9s ease forwards .15s;}
+        .mark img{width:100%;height:100%;object-fit:cover;display:block;margin:0;}
+        @keyframes pop{to{opacity:1; transform:scale(1);}}
+        @media(max-width:640px){.mark{width:160px;height:160px;border-radius:12px;}}
+
+        .img-slot{
+          position:relative;
+          background:linear-gradient(155deg, #17140a, #0c0b06);
+          border:1px dashed var(--gold-dim); border-radius:8px;
+          display:flex;align-items:center;justify-content:center; overflow:hidden;
+          color:var(--gold-dim); font-size:0.78rem; text-align:center; padding:18px;
+        }
+        .img-slot img{width:100%;height:100%;object-fit:contain; display:none;}
+        .img-slot img[src]:not([src=""]) { display:block; }
+        .img-slot .slot-label b{display:block;color:var(--gold);font-family:var(--kufi);font-size:0.8rem;margin-bottom:4px;}
+
+        #s1 .hero-arch{
+          position:absolute; bottom:-2px; left:50%; transform:translateX(-50%);
+          width:min(820px,88vw); opacity:0.4; z-index:-1;
+        }
+
+        .feat-grid{
+          display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+          background:var(--line); border:1px solid var(--line);
+          max-width:1000px; width:100%; margin-top:44px;
+          opacity:0; transform:translateY(24px);
+        }
+        .slide.active .feat-grid{animation:up 1s ease forwards .75s;}
+        .feat{
+          background:var(--bg-panel); padding:32px 20px; text-align:center;
+        }
+        .feat svg{width:34px;height:34px;stroke:var(--gold);fill:none;stroke-width:1.3;margin-bottom:14px;}
+        .feat h4{font-family:var(--kufi);font-size:0.98rem;color:var(--ink);margin-bottom:8px;}
+        .feat p{font-size:0.8rem;color:var(--ink-dim);line-height:1.7;font-weight:300;}
+        @media(max-width:760px){.feat-grid{grid-template-columns:repeat(2,1fr);}}
+
+        .phones{
+          display:flex; gap:26px; margin-top:40px; justify-content:center; flex-wrap:wrap;
+          opacity:0; transform:translateY(24px);
+        }
+        .slide.active .phones{animation:up 1s ease forwards .75s;}
+        .phones .img-slot{width:250px; aspect-ratio:9/19.5; border-radius:22px;}
+        @media(max-width:900px){.phones .img-slot{width:190px;}}
+        @media(max-width:640px){.phones .img-slot{width:150px;}}
+
+        #dev{background:radial-gradient(ellipse at center, rgba(201,162,75,0.06), transparent 65%);}
+        .dev-frame{
+          position:relative; padding:0 54px 58px; border:1px solid var(--line);
+          max-width:760px; width:min(92vw,760px); overflow:hidden;
+          background:linear-gradient(180deg, rgba(201,162,75,0.045), rgba(16,18,16,0.72) 42%, rgba(8,9,10,0.9));
+          box-shadow:0 30px 80px -35px rgba(201,162,75,0.32);
+        }
+        .dev-frame::before,.dev-frame::after{
+          content:''; position:absolute; width:30px;height:30px; border:1px solid var(--gold);
+        }
+        .dev-frame::before{top:-1px;right:-1px;border-left:none;border-bottom:none;}
+        .dev-frame::after{bottom:-1px;left:-1px;border-right:none;border-top:none;}
+        .dev-portrait{
+          width:100%; height:clamp(300px,42vw,410px); border-radius:0 0 28px 28px;
+          overflow:hidden; position:relative; margin:0 auto 34px;
+          border-bottom:1px solid rgba(201,162,75,0.42);
+          background:linear-gradient(180deg,#151610,#090a09);
+          box-shadow:0 28px 55px -30px rgba(201,162,75,0.55);
+          opacity:0; transform:translateY(-18px) scale(.97);
+        }
+        .dev-portrait::after{
+          content:''; position:absolute; inset:auto 0 0; height:38%;
+          background:linear-gradient(to top, rgba(8,9,10,.96), transparent);
+          pointer-events:none;
+        }
+        .slide.active .dev-portrait{animation:devImageIn 1s cubic-bezier(.2,.8,.2,1) forwards .08s;}
+        .dev-portrait img{width:100%;height:100%;object-fit:cover;object-position:center 18%;display:block;transform:scale(1.015);}
+        @keyframes devImageIn{to{opacity:1;transform:translateY(0) scale(1);}}
+
+        .dev-eyebrow{font-family:var(--kufi);color:var(--gold);font-size:0.78rem;letter-spacing:5px;
+          opacity:0; transform:translateY(14px);}
+        .slide.active .dev-eyebrow{animation:up .9s ease forwards .3s;}
+        .dev-quote{
+          font-family:var(--serif); font-style:italic; font-size:1.5rem; line-height:2.1; color:var(--ink);
+          margin-top:26px;
+          opacity:0; transform:translateY(20px);
+        }
+        .slide.active .dev-quote{animation:up 1s ease forwards .5s;}
+        .dev-ayah{color:var(--gold-bright);font-style:normal;white-space:nowrap;}
+
+        .dev-name{
+          margin-top:36px; font-family:var(--kufi); font-size:1.7rem; color:var(--gold-bright); letter-spacing:1px;
+          opacity:0; transform:translateY(18px);
+        }
+        .slide.active .dev-name{animation:up 1s ease forwards .75s;}
+
+        @media(max-width:640px){
+          .dev-frame{padding:0 18px 42px; width:92vw;}
+          .dev-portrait{height:300px;border-radius:0 0 22px 22px;margin-bottom:28px;}
+          .dev-quote{font-size:1.15rem;line-height:1.9;}
+          .dev-ayah{color:var(--gold-bright);font-style:normal;white-space:nowrap;}
+
+        .dev-name{font-size:1.45rem;}
+        }
+
+        .dev-role{margin-top:8px; color:var(--ink-dim); font-size:0.85rem; letter-spacing:3px;
+          opacity:0; transform:translateY(16px);}
+        .slide.active .dev-role{animation:up 1s ease forwards .9s;}
+        .dev-underline{width:60px;height:1px;background:var(--gold);margin:22px auto 0;
+          opacity:0; transform:scaleX(0);}
+        .slide.active .dev-underline{animation:line .9s ease forwards 1s;}
+        @keyframes line{to{opacity:1; transform:scaleX(1);}}
+
+        .stats-row{
+          display:flex; gap:min(9vw,70px); flex-wrap:wrap; justify-content:center; margin-top:8px;
+          opacity:0; transform:translateY(20px);
+        }
+        .slide.active .stats-row{animation:up 1s ease forwards .55s;}
+        .stat b{display:block;font-family:var(--serif);font-size:2.2rem;color:var(--gold-bright);}
+        .stat span{color:var(--ink-dim);font-size:0.78rem;letter-spacing:1px;}
+
+        .btn{
+          padding:16px 42px; border-radius:2px; font-family:var(--sans); font-weight:700;
+          font-size:0.98rem; text-decoration:none; cursor:pointer; letter-spacing:0.5px;
+          background:linear-gradient(135deg, var(--gold-bright), var(--gold-dim)); color:#0c0d0a;
+          display:inline-block; transition:transform .35s ease, box-shadow .35s ease;
+        }
+        .btn:hover{transform:translateY(-3px); box-shadow:0 18px 40px -12px rgba(201,162,75,0.45);}
+        .final-cta{margin-top:38px; opacity:0; transform:translateY(20px);}
+        .slide.active .final-cta{animation:up 1s ease forwards .85s;}
+
+        .final-note{
+          margin-top:20px; color:var(--ink-dim); font-size:0.8rem; letter-spacing:1px;
+          opacity:0; transform:translateY(16px);
+        }
+        .slide.active .final-note{animation:up 1s ease forwards 1s;}
+
+        /* ============ PERSISTENT DOWNLOAD BUTTON ============ */
+        .float-cta{
+          position:fixed; top:24px; left:50%; transform:translateX(-50%) translateY(-6px);
+          z-index:80; display:flex; align-items:center; gap:8px;
+          padding:11px 24px; border-radius:999px;
+          background:linear-gradient(135deg, var(--gold-bright), var(--gold-dim));
+          color:#0c0d0a; text-decoration:none; font-family:var(--sans); font-weight:700; font-size:0.85rem;
+          box-shadow:0 10px 28px -10px rgba(201,162,75,0.55);
+          opacity:0; animation:float-in .8s ease forwards 2.3s;
+          transition:transform .3s ease, box-shadow .3s ease;
+        }
+        .float-cta:hover{transform:translateX(-50%) translateY(-3px); box-shadow:0 16px 34px -10px rgba(201,162,75,0.7);}
+        .float-cta svg{width:15px;height:15px;stroke:#0c0d0a;fill:none;stroke-width:2;}
+        @keyframes float-in{to{opacity:1; transform:translateX(-50%) translateY(0);}}
+        @media(max-width:640px){
+          .float-cta{top:auto; bottom:64px; padding:9px 18px; font-size:0.78rem;}
+        }
+
+        a:focus-visible, .dot:focus-visible, .nav-btn:focus-visible, .float-cta:focus-visible{outline:2px solid var(--gold-bright); outline-offset:3px;}
+
+        @media (prefers-reduced-motion: reduce){
+          *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
         }
     </style>
 </head>
 <body>
-    <div class="container" id="app">
-        
-        <!-- معرض الصور -->
-        <div class="gallery-container">
-            <div class="main-image" id="mainImage">
-                <img id="mainImg" src="" alt="الراية">
-            </div>
-            <div class="thumbnails" id="thumbnails"></div>
-        </div>
-        
-        <h1>الراية</h1>
-        <div class="version" id="version">جاري التحميل...</div>
-        
-        <div id="content">
-            <div class="loading">
-                <div class="spinner"></div>
-                <div>جاري جلب رابط التحميل...</div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>منبر الحق... صوت الأمة</p>
-        </div>
-    </div>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        // ===== قائمة الصور =====
-        const images = [
-            {
-                url: "photo/ic_launcher_light-playstore.png",
-                alt: "شعار الراية الأبيض"
-            },
-            {
-                url: "photo/ic_launcher_dark-playstore.png",
-                alt: "شعار الراية الداكن"
-            },
-            {
-                url: "photo/ic_launcher_alternate-playstore.png",
-                alt: "شعار الراية المتناوب"
-            },
-            {
-                url: "photo/ic_launcher-playstore.png",
-                alt: "شعار الراية الافتراضي"
-            }
-        ];
-        
-        const DEFAULT_IMAGE = "https://raw.githubusercontent.com/vvcbvx/raety/main/app/src/main/ic_launcher_light-playstore.png";
-        
-        // ===== Bin IDs =====
-        // ✅ Bin الجديد لمعلومات التطبيق
-        const APP_INFO_BIN_ID = '6a0dbd17ee5a733b12ee547c';
-       
-        ;
-        const API_KEY = '$2a$10$y4mNOprJ8lAMY0xM8KfYTuehMVndGcLtG2f83auImdb6Oa/wmXGEC';
-        
-        let currentMainImage = 0;
-        let downloadUrl = '';
-        let directApkUrl = '';
-        
-        // عرض الصور المصغرة
-        function renderThumbnails() {
-            const thumbnailsContainer = document.getElementById('thumbnails');
-            const mainImg = document.getElementById('mainImg');
-            
-            if (images.length > 0 && images[0].url) {
-                mainImg.src = images[0].url;
-            } else {
-                mainImg.src = DEFAULT_IMAGE;
-            }
-            
-            thumbnailsContainer.innerHTML = images.map((img, index) => `
-                <div class="thumbnail ${index === 0 ? 'active' : ''}" 
-                     data-index="${index}"
-                     onmouseenter="changeMainImage(${index})"
-                     onclick="changeMainImage(${index})">
-                    <img src="${img.url}" alt="${img.alt}" onerror="this.src='${DEFAULT_IMAGE}'">
-                </div>
-            `).join('');
+<div id="preloader">
+  <div class="pre-mark"><img src="2.png" alt="شعار التطبيق"></div>
+  <div class="pre-title">الراية</div>
+  <div class="pre-bar"><div class="pre-bar-fill" id="preFill"></div></div>
+  <div class="pre-note">جارٍ التحميل</div>
+</div>
+
+<div class="timer-bar" id="timerBar"></div>
+<div class="slide-index" id="slideIndex"><b>01</b> / 06</div>
+
+<a href="#" class="float-cta" id="floatCta">
+  <svg viewBox="0 0 24 24"><path d="M12 3v13m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+  <span id="floatCtaLabel">تحميل التطبيق</span>
+</a>
+
+<div class="deck" id="deck">
+
+    <section class="slide active" id="s1">
+        <div class="mark img-slot" style="border-style:solid;">
+            <img src="2.png" alt="شعار التطبيق">
+         
+        </div>
+        <span class="kicker">مساحة تجمع ما ينفعك</span>
+        <h1 class="slide-title">الراية</h1>
+        <p class="lead">رفيقك الهادئ إلى الخير؛ قرآنٌ يُتلى، وعلمٌ يُنتفع به، وخطبٌ تُلهم، وأناشيدٌ تلامس القلب.</p>
+        <svg class="hero-arch" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 260 L0 140 Q450 -60 900 140 L900 260" fill="none" stroke="#c9a24b" stroke-width="1"/>
+        </svg>
+    </section>
+
+    <section class="slide" id="s2">
+        <span class="kicker">عن المنصة</span>
+        <h1 class="slide-title" style="font-size:clamp(1.9rem,4.5vw,3rem);">بدأت بفكرة بسيطة... وكبرت لتصبح أثرًا يُرجى أن يبقى</h1>
+        <p class="lead">صُممت الراية لتجمع ما ينفع المسلم في تجربة واحدة هادئة؛ من تلاوة القرآن والاستماع إلى المحتوى النافع، إلى الخطب والمحاضرات والأناشيد — كل ذلك بواجهة واضحة تضع المحتوى في المقدمة.</p>
+    </section>
+
+    <section class="slide" id="s3">
+        <span class="kicker">الأقسام</span>
+        <h1 class="slide-title" style="font-size:clamp(1.9rem,4.5vw,3rem);">محتوى نافع... في متناولك</h1>
+        <div class="feat-grid">
+            <div class="feat">
+                <svg viewBox="0 0 48 48"><path d="M24 8c-6 0-11 3-11 3v26s5-3 11-3 11 3 11 3V11s-5-3-11-3Z"/><path d="M24 8v29"/></svg>
+                <h4>القرآن الكريم</h4><p>كتاب الله بين يديك، مع تلاوات مختارة</p>
+            </div>
+            <div class="feat">
+                <svg viewBox="0 0 48 48"><rect x="10" y="8" width="28" height="32" rx="2"/><path d="M16 18h16M16 24h16M16 30h10"/></svg>
+                <h4>الخطب</h4><p>خطب نافعة للقراءة والاستفادة</p>
+            </div>
+            <div class="feat">
+                <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16"/><path d="M20 17v14l12-7-12-7Z"/></svg>
+                <h4>المحاضرات</h4><p>محتوى يوسّع المعرفة ويثري الفكر</p>
+            </div>
+            <div class="feat">
+                <svg viewBox="0 0 48 48"><path d="M14 34V14l20-4v20"/><circle cx="14" cy="34" r="4"/><circle cx="34" cy="30" r="4"/></svg>
+                <h4>الأناشيد</h4><p>أناشيد مختارة للاستماع في أي وقت</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide" id="s4">
+        <span class="kicker">نظرة من الداخل</span>
+        <h1 class="slide-title" style="font-size:clamp(1.9rem,4.5vw,3rem);">صُممت التفاصيل لتكون التجربة أبسط</h1>
+        <div class="phones">
+            <div class="img-slot"><img src="01.jpg"></div>
+            <div class="img-slot"><img src="02.jpg"></div>
+            <div class="img-slot"><img src="03.jpg"></div>
+            <div class="img-slot"><img src="04.jpg"></div>
+        </div>
+    </section>
+
+    <section class="slide" id="dev">
+        <div class="dev-frame">
+            <div class="dev-portrait"><img src="dev.png" alt="المطوّر"></div>
+            <span class="dev-eyebrow">تحية إلى المطوّر أبو راشد</span>
+            <p class="dev-quote">"خلف هذا العمل سعيٌ طويل، وتجارب كثيرة، وساعات من البناء والتفاصيل حتى خرجت الراية بهذه الصورة. إلى أبو راشد: جعلت من الفكرة عملًا، ومن الجهد خطوة نحو أثرٍ نافع؛ فنسأل الله أن يبارك في سعيك ويكتب له القبول والنفع. قال تعالى: <span class="dev-ayah">﴿فَاسْتَبِقُوا الْخَيْرَاتِ﴾</span> — البقرة: 148."</p>
+            <div class="dev-underline"></div>
+            <div class="dev-name">طوّرها أبو راشد</div>
+            <div class="dev-role">مؤسس ومطوّر منصة الراية</div>
+        </div>
+    </section>
+
+    <section class="slide" id="s6">
+        <span class="kicker">خطوتك الأولى</span>
+        <h1 class="slide-title">اجعل الراية رفيقك</h1>
+        <div class="stats-row">
+            <div class="stat"><b>114</b><span>سورة كاملة</span></div>
+            <div class="stat"><b>15+</b><span>نشيد</span></div>
+            <div class="stat"><b>7</b><span>أقسام رئيسية</span></div>
+            <div class="stat"><b>100%</b><span>بدون إنترنت</span></div>
+        </div>
+        <a href="#" class="btn final-cta" id="finalCta"><span id="finalCtaLabel">تحميل التطبيق</span></a>
+        <div class="final-note" id="versionNote">© 2026 الراية — صُنعت بعناية لكل من يبحث عن الخير</div>
+    </section>
+
+</div>
+
+<div class="dots" id="dots"></div>
+
+<script>
+    (function(){
+      const deck = document.getElementById('deck');
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const dotsWrap = document.getElementById('dots');
+      const indexLabel = document.getElementById('slideIndex');
+      const timerBar = document.getElementById('timerBar');
+      const total = slides.length;
+      let current = 0;
+
+      slides.forEach((_, i) => {
+        const d = document.createElement('div');
+        d.className = 'dot' + (i === 0 ? ' active' : '');
+        d.setAttribute('role','button');
+        d.setAttribute('tabindex','0');
+        d.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(d);
+      });
+      const dots = Array.from(dotsWrap.children);
+
+      function pad(n){ return n < 10 ? '0'+n : ''+n; }
+
+      function setCurrent(i){
+        current = i;
+        dots.forEach((d,idx) => d.classList.toggle('active', idx === i));
+        indexLabel.innerHTML = '<b>'+pad(i+1)+'</b> / '+pad(total);
+      }
+
+      function goTo(i){
+        i = Math.max(0, Math.min(total-1, i));
+        slides[i].scrollIntoView({ behavior:'smooth', block:'start' });
+      }
+      function next(){ goTo(current+1); }
+      function prev(){ goTo(current-1); }
+
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'ArrowLeft' || e.key === 'ArrowDown'){ next(); }
+        if(e.key === 'ArrowRight' || e.key === 'ArrowUp'){ prev(); }
+      });
+
+      // يكشف أي شريحة ظاهرة حاليًا أثناء التمرير، ويُشغّل حركات الدخول لعناصرها
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const idx = slides.indexOf(entry.target);
+          if(entry.isIntersecting && entry.intersectionRatio >= 0.55){
+            entry.target.classList.add('active');
+            setCurrent(idx);
+          } else {
+            entry.target.classList.remove('active');
+          }
+        });
+      }, { root: deck, threshold: [0, 0.55, 1] });
+      slides.forEach(s => observer.observe(s));
+
+      // شريط تقدّم التمرير أعلى الصفحة
+      deck.addEventListener('scroll', () => {
+        const max = deck.scrollHeight - deck.clientHeight;
+        const pct = max > 0 ? (deck.scrollTop / max) * 100 : 0;
+        timerBar.style.width = pct + '%';
+      });
+
+      // ---- Preloader ----
+      const preloader = document.getElementById('preloader');
+      const preFill = document.getElementById('preFill');
+      let p = 0;
+      const preTimer = setInterval(() => {
+        p += Math.random()*18 + 8;
+        if(p >= 100){
+          p = 100;
+          preFill.style.width = '100%';
+          clearInterval(preTimer);
+          setTimeout(() => { preloader.classList.add('hide'); }, 280);
+          return;
         }
-        
-        function changeMainImage(index) {
-            if (index === currentMainImage) return;
-            currentMainImage = index;
-            const mainImg = document.getElementById('mainImg');
-            const newImageUrl = images[index]?.url || DEFAULT_IMAGE;
-            
-            mainImg.style.opacity = '0.5';
-            setTimeout(() => {
-                mainImg.src = newImageUrl;
-                mainImg.style.opacity = '1';
-            }, 150);
-            
-            document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
-                if (i === index) {
-                    thumb.classList.add('active');
-                } else {
-                    thumb.classList.remove('active');
-                }
-            });
+        preFill.style.width = p + '%';
+      }, 220);
+
+      // ---- استرداد رابط التحميل ومعلومات التطبيق ----
+      // ضع هنا نفس Bin ID و API Key المستخدمين في صفحة التحميل
+      const APP_INFO_BIN_ID = '6a0dbd17ee5a733b12ee547c';
+      const API_KEY = '$2a$10$y4mNOprJ8lAMY0xM8KfYTuehMVndGcLtG2f83auImdb6Oa/wmXGEC';
+      const FALLBACK_DIRECT_URL = 'https://huggingface.co/hlhlhhk/app-AL/resolve/main/app-release.apk?download=true';
+
+      let downloadUrl = '';
+      let downloadReady = false;
+
+      const floatCta = document.getElementById('floatCta');
+      const floatCtaLabel = document.getElementById('floatCtaLabel');
+      const finalCta = document.getElementById('finalCta');
+      const finalCtaLabel = document.getElementById('finalCtaLabel');
+      const versionNote = document.getElementById('versionNote');
+
+      async function getAppInfo(){
+        try{
+          const response = await fetch(`https://api.jsonbin.io/v3/b/${APP_INFO_BIN_ID}/latest`, {
+            headers: { 'X-Master-Key': API_KEY }
+          });
+          if(!response.ok) throw new Error('فشل الاتصال');
+          const data = await response.json();
+          const record = data.record || data;
+          return {
+            version: record.appVersion || '1.0.0',
+            downloadUrl: record.appDownloadUrl || '',
+            directApkUrl: record.directApkUrl || ''
+          };
+        }catch(err){
+          console.error('تعذّر جلب معلومات التطبيق:', err);
+          return { version: '1.0.0', downloadUrl: '', directApkUrl: '' };
         }
-        
-        // ✅ جلب معلومات التطبيق من Bin الجديد
-        async function getAppInfo() {
-            try {
-                console.log('جلب معلومات التطبيق من Bin الجديد...');
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${APP_INFO_BIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': API_KEY }
-                });
-                
-                if (!response.ok) throw new Error('فشل الاتصال');
-                
-                const data = await response.json();
-                const record = data.record || data;
-                
-                // قراءة البيانات من Bin الجديد
-                const appVersion = record.appVersion || '1.0.0';
-                const appDownloadUrl = record.appDownloadUrl || '';
-                const directApk = record.directApkUrl || '';
-                
-                console.log('معلومات التطبيق من Bin الجديد:', { appVersion, appDownloadUrl, directApk });
-                
-                return {
-                    version: appVersion,
-                    downloadUrl: appDownloadUrl,
-                    directApkUrl: directApk
-                };
-            } catch (error) {
-                console.error('خطأ في جلب معلومات التطبيق:', error);
-                return {
-                    version: '1.0.0',
-                    downloadUrl: '',
-                    directApkUrl: ''
-                };
-            }
-        }
-        
-        // ✅ رابط مباشر احتياطي
-        const FALLBACK_DIRECT_URL = 'https://huggingface.co/hlhlhhk/app-AL/resolve/main/app-release.apk?download=true';
-        
-        async function init() {
-            renderThumbnails();
-            
-            const contentDiv = document.getElementById('content');
-            const versionDiv = document.getElementById('version');
-            
-            // ✅ جلب المعلومات من Bin الجديد
-            const appInfo = await getAppInfo();
-            
-            // استخدام directApkUrl أولاً، ثم appDownloadUrl، ثم الرابط الاحتياطي
-            downloadUrl = appInfo.directApkUrl || appInfo.downloadUrl || FALLBACK_DIRECT_URL;
-            directApkUrl = appInfo.directApkUrl || '';
-            
-            versionDiv.innerHTML = `الإصدار ${appInfo.version}`;
-            
-            contentDiv.innerHTML = `
-                <button class="download-btn" onclick="startDownload()">
-                    <i class="fas fa-download"></i> تحميل التطبيق
-                </button>
-                <button class="secondary-btn" onclick="copyUrl()">
-                    <i class="fas fa-copy"></i> نسخ رابط التحميل
-                </button>
-                <div class="link-box" id="linkBox">
-                    <small>رابط التحميل: </small>
-                    <a href="${downloadUrl}" target="_blank" class="direct-link" style="font-size: 0.7rem; word-break: break-all;">${downloadUrl.substring(0, 60)}...</a>
-                </div>
-            `;
-            
-            const linkBox = document.getElementById('linkBox');
-            if (linkBox) linkBox.style.display = 'block';
-        }
-        
-        function startDownload() {
-            if (!downloadUrl) {
-                alert('رابط التحميل غير متوفر حالياً');
-                return;
-            }
-            window.location.href = downloadUrl;
-            
-            const contentDiv = document.getElementById('content');
-            contentDiv.innerHTML = `
-                <div style="color: #28a745; margin: 10px 0;">
-                    <i class="fas fa-check-circle"></i> جاري فتح رابط التحميل...
-                </div>
-                <div class="link-box" id="linkBox" style="display: flex; flex-direction: column; gap: 10px;">
-                    <p>إذا لم يبدأ التحميل تلقائياً، اضغط على الرابط:</p>
-                    <a href="${downloadUrl}" target="_blank" class="direct-link">${downloadUrl.substring(0, 80)}...</a>
-                </div>
-            `;
-        }
-        
-        function copyUrl() {
-            navigator.clipboard.writeText(downloadUrl);
-            alert('✅ تم نسخ الرابط');
-        }
-        
-        init();
-    </script>
+      }
+
+      function startDownload(){
+        if(!downloadReady){ return; } // زر مازال في وضع التحميل، لا شيء يحدث بعد
+        window.location.href = downloadUrl || FALLBACK_DIRECT_URL;
+      }
+
+      floatCta.addEventListener('click', (e) => { e.preventDefault(); startDownload(); });
+      finalCta.addEventListener('click', (e) => { e.preventDefault(); startDownload(); });
+
+      (async function initDownloadInfo(){
+        // أثناء الجلب: الأزرار تبقى في وضع "جارٍ التحميل" ولا تُفعَّل
+        floatCtaLabel.textContent = 'جارٍ التحضير...';
+        finalCtaLabel.textContent = 'جارٍ التحضير...';
+
+        const info = await getAppInfo();
+        downloadUrl = info.directApkUrl || info.downloadUrl || FALLBACK_DIRECT_URL;
+        downloadReady = true;
+
+        floatCtaLabel.textContent = 'تحميل التطبيق';
+        finalCtaLabel.textContent = 'تحميل التطبيق';
+        versionNote.textContent = `الإصدار ${info.version} © 2026 الراية — صُنعت بعناية لكل من يبحث عن الخير`;
+      })();
+    })();
+</script>
+
 </body>
 </html>
