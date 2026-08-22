@@ -1,6 +1,19 @@
 {
   "posts": [
     {
+      "id": 27,
+      "title": "عينن فيها تسمى سلسبيلا",
+      "speaker": "فرقة ابو راشد",
+      "duration": "0:00",
+      "category": "الجهاديات",
+      "description": "",
+      "videoUrl": "https://raw.githubusercontent.com/vvcbvx/raety/main/uploads/video/video_1787400134427.mp4",
+      "audioUrl": "",
+      "coverImage": "https://raw.githubusercontent.com/vvcbvx/raety/main/uploads/cover/cover_1787400131603.jpeg",
+      "dateAdded": "2026-08-22T12:02:19.033Z",
+      "mediaType": "video"
+    },
+    {
       "id": 26,
       "title": "نشيد",
       "speaker": "فرقة البيان",
@@ -338,10 +351,5 @@
       "dateAdded": "2026-05-19T18:36:51.529Z",
       "mediaType": "audio"
     }
-  ],
-  "adminPassword": "aborashid123",
-  "settingsPassword": "ASD1234567",
-  "appVersion": "3.2",
-  "appDownloadUrl": "https://vvcbvx.github.io/raety/",
-  "directApkUrl": "https://huggingface.co/hlhlhhk/app-AL/resolve/main/app-release.apk?download=true"
+  ]
 }
