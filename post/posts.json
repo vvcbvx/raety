@@ -1,6 +1,5 @@
 {
   "posts": [
-
     {
       "id": 26,
       "title": "نشيد",
@@ -22,8 +21,8 @@
       "category": "الجهاديات",
       "description": "",
       "videoUrl": "",
-      "audioUrl": "https://raw.githubusercontent.com/vvcbvx/raety/main/uploads/audio_1779386905111.mp3",
-      "coverImage": "",
+      "audioUrl": null,
+      "coverImage": "https://raw.githubusercontent.com/vvcbvx/raety/main/uploads/cover/cover_1787411299072.png",
       "dateAdded": "2026-05-21T18:08:51.076Z",
       "mediaType": "audio"
     },
