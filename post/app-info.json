@@ -1,1 +1,20 @@
 
+{
+  "appName": "تطبيق الراية",
+  "appDescription": "منبر الحق... صوت الأمة ",
+  "appVersion": "3.2",
+  "appDownloadUrl": "https://vvcbvx.github.io/raety/",
+  "directApkUrl": "https://huggingface.co/hlhlhhk/app-AL/resolve/main/app-release.apk?download=true",
+  "developer": "( ابو راشد ) Abo Rashid ",
+  "email": "aborashidalghnam@gmail.com",
+  "website": "https://vvcbvx.github.io/raety/",
+  "appFeatures": [
+    "📥 تحميل المقاطع للمشاهدة دون إنترنت",
+    "⭐ إضافة إلى المفضلة",
+    "🔍 بحث متقدم في القران",
+    "🎬 مقاطع فيديو وصوتية",
+    "🕌 خطب ومحاضرات وأناشيد",
+    "📱 واجهة عربية جذابة",
+    "🌜قسم خاص بالقرآن الكريم  مع تفسير للقران"
+  ]
+}
